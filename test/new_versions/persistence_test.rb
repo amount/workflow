@@ -48,12 +48,12 @@ class PersistenceTest < ActiveRecordTestCase
     o
   end
 
-  test 'ensure other dirty attributes are not saved on state change' do
+  test 'ensure other dirty attributes are saved on state change' do
     o = assert_state 'order6', 'accepted'
     o.title = 'going to change the title'
     assert o.changed?
     o.ship!
-    assert o.changed?, 'title should not be saved and the change still stay pending'
+    assert !o.changed?, 'title should be saved as a side effect of the state change'
   end
 
 end
