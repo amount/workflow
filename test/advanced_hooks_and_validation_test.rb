@@ -4,7 +4,6 @@ $VERBOSE = false
 require 'active_record'
 require 'sqlite3'
 require 'workflow'
-require 'pry'
 
 ActiveRecord::Migration.verbose = false
 
