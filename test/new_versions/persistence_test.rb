@@ -53,7 +53,7 @@ class PersistenceTest < ActiveRecordTestCase
     o.title = 'going to change the title'
     assert o.changed?
     o.ship!
-    assert !o.changed?, 'title should be saved as a side effect of the state change'
+    refute o.changed?, 'title should be saved as a side effect of the state change'
   end
 
 end
