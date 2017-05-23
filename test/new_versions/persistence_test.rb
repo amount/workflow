@@ -22,8 +22,6 @@ class PersistenceTestOrder < ActiveRecord::Base
     state :shipped
   end
 
-  attr_accessible :title # protecting all the other attributes
-
 end
 
 PersistenceTestOrder.logger = Logger.new(STDOUT) # active_record 2.3 expects a logger instance
@@ -50,12 +48,12 @@ class PersistenceTest < ActiveRecordTestCase
     o
   end
 
-  test 'ensure other dirty attributes are not saved on state change' do
+  test 'ensure other dirty attributes are saved on state change' do
     o = assert_state 'order6', 'accepted'
     o.title = 'going to change the title'
     assert o.changed?
     o.ship!
-    assert o.changed?, 'title should not be saved and the change still stay pending'
+    refute o.changed?, 'title should be saved as a side effect of the state change'
   end
 
 end

@@ -3,7 +3,7 @@ module Workflow
     module ActiveRecord
       def self.included(klass)
         klass.send :include, Adapter::ActiveRecord::InstanceMethods
-        klass.send :extend, Adapter::ActiveRecord::Scopes
+        klass.send :extend, Adapter::ActiveRecord::ClassMethods
         klass.before_validation :write_initial_state
       end
 
@@ -15,8 +15,7 @@ module Workflow
         # On transition the new workflow state is immediately saved in the
         # database.
         def persist_workflow_state(new_value)
-          # Rails 3.1 or newer
-          update_column self.class.workflow_column, new_value
+          update_attribute self.class.workflow_column, new_value
         end
 
         private
@@ -42,7 +41,7 @@ module Workflow
       # Example above just adds `where(:state_column_name => 'pending')` or
       # `where.not(:state_column_name => 'pending')` to AR query and returns
       # ActiveRecord::Relation.
-      module Scopes
+      module ClassMethods
         def self.extended(object)
           class << object
             alias_method :workflow_without_scopes, :workflow unless method_defined?(:workflow_without_scopes)

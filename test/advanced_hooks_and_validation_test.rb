@@ -47,7 +47,10 @@ class Article < ActiveRecord::Base
         fields_to_validate = meta[:validates_presence_of]
         if fields_to_validate
           validations = Proc.new {
-            errors.add_on_blank(fields_to_validate) if fields_to_validate
+            fields_to_validate.each do |field|
+              value = read_attribute_for_validation(field)
+              errors.add(field, :empty) if value.nil? || value.empty?
+            end
           }
         end
 
